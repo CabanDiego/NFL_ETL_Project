@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS nfl_2009_wk1 AS
+    SELECT * FROM nfl_pbp_raw;
+
+CREATE TABLE IF NOT EXISTS nfl_2009_run AS
+    SELECT * FROM nfl_2009_wk1 
+WHERE PlayType = 'Run';
+
+CREATE TABLE IF NOT EXISTS nfl_2009_pass AS
+    SELECT * FROM nfl_2009_wk1 
+WHERE PlayType = 'Pass';

@@ -6,6 +6,7 @@ from pipeline import run_pipeline
 
 BASEPATH = Path(__file__).resolve().parent.parent
 RAWDATA = BASEPATH / "data" / "nfl_play_by_play.csv"
+CLEANED = BASEPATH / "data" / "nfl_play_by_play_cleaned.csv"
 
 def main():
     '''Main'''
@@ -13,7 +14,7 @@ def main():
     logger.info("Starting Pipeline")
     logger.info(f"Input File: {RAWDATA}")
     try:
-        run_pipeline(RAWDATA)
+        run_pipeline(RAWDATA, CLEANED)
     finally:
         logger.info("Finished Pipeline \n")
 

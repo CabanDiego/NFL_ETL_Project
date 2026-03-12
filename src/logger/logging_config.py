@@ -1,8 +1,9 @@
+'''Module to set up logger'''
 import logging
 from pathlib import Path
 
 def log_setup():
-    
+    '''Logger set up'''
     log_dir = Path(__file__).resolve().parent
     
     log_file = log_dir / "logs.log"

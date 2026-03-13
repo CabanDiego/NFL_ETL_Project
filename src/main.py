@@ -5,7 +5,7 @@ from logger.logging_config import log_setup
 from pipeline import run_pipeline
 
 BASEPATH = Path(__file__).resolve().parent.parent
-RAWDATA = BASEPATH / "data" / "small_data.csv"
+RAWDATA = BASEPATH / "data" / "nfl_play_by_play.csv"
 CLEANED = BASEPATH / "data" / "nfl_play_by_play_cleaned.csv"
 
 def main():

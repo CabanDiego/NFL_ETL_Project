@@ -21,7 +21,7 @@ def manage_file(source: Path, output: Path):
         "Penalty.Yards" : "Penalty_Yards"
     }
 
-    chunksize = 500
+    chunksize = 5000
     logger.info(f"Chunking Data in chunks of {chunksize}")
     #Unwanted Columns from original
     unneeded_cols = ['TimeUnder', 'TimeSecs', 'PlayTimeDiff', 'yrdline100',

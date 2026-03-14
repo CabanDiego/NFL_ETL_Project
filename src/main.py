@@ -1,12 +1,19 @@
 '''Main'''
+import os
 import logging
 from pathlib import Path
+from dotenv import load_dotenv
 from logger.logging_config import log_setup
 from pipeline import run_pipeline
 
 BASEPATH = Path(__file__).resolve().parent.parent
 RAWDATA = BASEPATH / "data" / "nfl_play_by_play.csv"
-CLEANED = BASEPATH / "data" / "nfl_play_by_play_cleaned.csv"
+load_dotenv()
+db_url = (
+    f"postgresql+psycopg2://{os.environ['PG_USER']}:"
+    f"{os.environ['PG_PASS']}@{os.environ['PG_HOST']}:5432/"
+    f"{os.environ['PG_DB']}"
+)
 
 def main():
     '''Main'''
@@ -14,7 +21,9 @@ def main():
     logger.info("Starting Pipeline")
     logger.info(f"Input File: {RAWDATA}")
     try:
-        run_pipeline(RAWDATA, CLEANED)
+        run_pipeline(RAWDATA, db_url)
+    except Exception as e:
+        logger.exception("Pipeline Failed")
     finally:
         logger.info("Finished Pipeline \n")
 

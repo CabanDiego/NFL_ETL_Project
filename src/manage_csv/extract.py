@@ -5,8 +5,8 @@ import pandas as pd
 
 logger = logging.getLogger(__name__)
 
-def manage_file(source: Path, output: Path):
-    '''Read, Clean, and output new csv'''
+def read_and_load(source: Path,):
+    '''Read and clean csv into chunks'''
 
     #Verify data file is in folder
     if not source.exists():
@@ -23,6 +23,7 @@ def manage_file(source: Path, output: Path):
 
     chunksize = 5000
     logger.info(f"Chunking Data in chunks of {chunksize}")
+    
     #Unwanted Columns from original
     unneeded_cols = ['TimeUnder', 'TimeSecs', 'PlayTimeDiff', 'yrdline100',
                      'sp', 'ExPointResult', 'TwoPointConv', 'DefTwoPoint',
@@ -41,23 +42,15 @@ def manage_file(source: Path, output: Path):
                      'WPA', 'airWPA', 'yacWPA']
 
     #Looping through each chunk using enumerate to see which chunk it is for headers
-    for i, chunk in enumerate(pd.read_csv(source, chunksize=chunksize)):
-        #Dropping columns
-        #Looping through in case columns are missing for a row
+    for chunk in pd.read_csv(source, chunksize=chunksize):
+        
+        #Drop unwanted columns
         cols_to_drop = [c for c in unneeded_cols if c in chunk.columns]
         chunk = chunk.drop(columns=cols_to_drop)
 
-        #Rename Columns if they are in the chunk
-        rename_exists = {k: v for k, v in rename_cols.items()if k in chunk.columns}
+        #Rename columns
+        rename_exists = {k: v for k, v in rename_cols.items() if k in chunk.columns}
         chunk = chunk.rename(columns=rename_exists)
 
-        #For the first chunk write with header
-        if i == 0:
-            chunk.to_csv(output, index=False)
-            if rename_exists:
-                logger.info(f"Renamed columns: {list(rename_exists.values())}")
-        #Ignore header for rest of the chunks
-        else:
-            chunk.to_csv(output, mode='a', index=False, header=False)
-
-    logger.info(f"Dropped {len(unneeded_cols)} columns from raw data")
+        #Yield the cleaned chunk to be loaded into db
+        yield chunk

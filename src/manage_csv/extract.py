@@ -41,7 +41,7 @@ def read_and_load(source: Path,):
                      'Away_WP_pre', 'Home_WP_post','Away_WP_post', 'Win_Prob', 
                      'WPA', 'airWPA', 'yacWPA']
 
-    #Looping through each chunk using enumerate to see which chunk it is for headers
+    #Looping through each chunk to send to db
     for chunk in pd.read_csv(source, chunksize=chunksize):
         
         #Drop unwanted columns
@@ -51,6 +51,18 @@ def read_and_load(source: Path,):
         #Rename columns
         rename_exists = {k: v for k, v in rename_cols.items() if k in chunk.columns}
         chunk = chunk.rename(columns=rename_exists)
+        
+        #Strip whitespace from columns
+        for col in chunk.select_dtypes(include="object").columns:
+            chunk[col] = chunk[col].str.strip()
 
+        #Only drop rows where posteam is empty or missing
+        if "posteam" in chunk.columns:
+            chunk = chunk[chunk["posteam"].notna() & (chunk["posteam"] != "")]
+
+        #Capitalize the PlayType column to make it easier to query
+        if "PlayType" in chunk.columns:
+            chunk["PlayType"] = chunk["PlayType"].str.title()
+        
         #Yield the cleaned chunk to be loaded into db
         yield chunk

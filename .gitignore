@@ -4,7 +4,5 @@ __pycache__/
 src/logger/logs.log
 data/nfl_play_by_play.csv
 *.pem
-db_settings.txt
-data/nfl_play_by_play_cleaned.csv
-nfl.db
 .env
+*.db

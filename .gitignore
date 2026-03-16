@@ -6,4 +6,3 @@ data/nfl_play_by_play.csv
 *.pem
 .env
 *.db
-sandbox.db

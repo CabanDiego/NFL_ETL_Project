@@ -55,10 +55,22 @@ def read_and_load(source: Path,):
         #Strip whitespace from columns
         for col in chunk.select_dtypes(include="object").columns:
             chunk[col] = chunk[col].str.strip()
+            
+        #Convert all team abbreviations to uppercase
+        chunk["posteam"] = chunk["posteam"].str.upper()
+        chunk["DefensiveTeam"] = chunk["DefensiveTeam"].str.upper()
+        
+        #Fixing inconsistency found in the Jaguars stats
+        chunk["posteam"] = chunk["posteam"].replace({"JAC": "JAX"})
+        chunk["DefensiveTeam"] = chunk["DefensiveTeam"].replace({"JAC": "JAX"})
 
         #Only drop rows where posteam is empty or missing
         if "posteam" in chunk.columns:
             chunk = chunk[chunk["posteam"].notna() & (chunk["posteam"] != "")]
+            
+        #Only drop rows where season is empty or missing
+        if "Season" in chunk.columns:
+            chunk = chunk[chunk["Season"].notna() & (chunk["Season"] != "")]
 
         #Capitalize the PlayType column to make it easier to query
         if "PlayType" in chunk.columns:

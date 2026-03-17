@@ -13,6 +13,8 @@ def run_pipeline(source: Path, db_url:str):
     
     load_to_db(chunks, db_url)
     
+    logger.info("Creating tables inside the data warehouse")
     run_sql_file(db_url, Path("src/sql/create_tables.sql"))
     
+    logger.info("Populating tables inside data warehouse using raw table in staging")
     run_sql_file(db_url, Path("src/sql/insert_into_tables.sql"))

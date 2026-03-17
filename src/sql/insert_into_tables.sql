@@ -1,6 +1,6 @@
 -- dim_team
 INSERT INTO dim_team(posteam)
-SELECT DISTINCT posteam
+SELECT DISTINCT UPPER(posteam)
 FROM nfl_pbp_raw
 ON CONFLICT (posteam) DO NOTHING;
 
@@ -25,34 +25,38 @@ INSERT INTO dim_plays(
     yards_gained,
     down,
     is_positive_run,
-    is_positive_pass
+    is_positive_pass,
+    season
 )
 SELECT
     gameid,
-    posteam,
-    defensiveteam,
-    playtype,
+    UPPER(posteam),
+    UPPER(defensiveteam),
+    INITCAP(playtype),
     yards_gained,
     down,
     CASE WHEN playtype = 'Run' AND yards_gained > 0 THEN 1 ELSE 0 END,
-    CASE WHEN playtype = 'Pass' AND yards_gained > 0 THEN 1 ELSE 0 END
+    CASE WHEN playtype = 'Pass' AND yards_gained > 0 THEN 1 ELSE 0 END,
+    season
 FROM nfl_pbp_raw;
 
 -- dim_num_play_types
-INSERT INTO dim_num_play_types(posteam, total_run, total_pass)
+INSERT INTO dim_num_play_types(posteam, season, total_run, total_pass)
 SELECT 
     posteam,
+    season,
     SUM(CASE WHEN play_type = 'Run' THEN 1 ELSE 0 END),
     SUM(CASE WHEN play_type = 'Pass' THEN 1 ELSE 0 END)
 FROM dim_plays
-GROUP BY posteam
-ON CONFLICT (posteam) DO UPDATE
+GROUP BY posteam, season
+ON CONFLICT (posteam, season) DO UPDATE
 SET total_run = EXCLUDED.total_run,
     total_pass = EXCLUDED.total_pass;
 
 -- total_team_facts
 INSERT INTO total_team_facts(
     posteam,
+    season,
     total_plays,
     run_plays,
     pass_plays,
@@ -61,18 +65,20 @@ INSERT INTO total_team_facts(
 )
 SELECT 
     t.posteam,
+    p.season,
     COUNT(p.play_id) AS total_plays,
     MAX(n.total_run) AS run_plays,
     MAX(n.total_pass) AS pass_plays,
+    --Getting percentages to the 2nd decimal 
     ROUND(SUM(p.is_positive_run)::numeric / COUNT(p.play_id), 4) * 100 AS pos_run,
     ROUND(SUM(p.is_positive_pass)::numeric / COUNT(p.play_id), 4) * 100 AS pos_pass
 FROM dim_team AS t
 JOIN dim_plays AS p
     ON t.posteam = p.posteam
 JOIN dim_num_play_types AS n
-    ON t.posteam = n.posteam
-GROUP BY t.posteam
-ON CONFLICT (posteam) DO UPDATE
+    ON t.posteam = n.posteam AND p.season = n.season
+GROUP BY t.posteam, p.season
+ON CONFLICT (posteam, season) DO UPDATE
 SET total_plays = EXCLUDED.total_plays,
     run_plays = EXCLUDED.run_plays,
     pass_plays = EXCLUDED.pass_plays,

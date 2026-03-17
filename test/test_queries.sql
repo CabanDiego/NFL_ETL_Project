@@ -1,4 +1,2 @@
 .headers on 
-
-SELECT * 
-FROM total_team_facts;
+SELECT Date, GameId, posteam FROM plays LIMIT 5;

@@ -4,7 +4,7 @@
 This project is a small ETL pipeline using NFL Play By Play Dataset. The purpose of this project is to practice using SQL, pandas, matplotlib, NumPy, Postgressql, and connecting to an EC2 Instance in AWS.
 
 ## Technologies
- - Python 3.10+
+ - Python 3.11+
  - SQL
  - Postgres
  - AWS EC2

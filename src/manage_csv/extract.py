@@ -21,7 +21,7 @@ def read_and_load(source: Path,):
         "Penalty.Yards" : "Penalty_Yards"
     }
 
-    chunksize = 5000
+    chunksize = 10000
     logger.info(f"Chunking Data in chunks of {chunksize}")
     
     #Unwanted Columns from original
@@ -42,7 +42,7 @@ def read_and_load(source: Path,):
                      'WPA', 'airWPA', 'yacWPA']
 
     #Looping through each chunk to send to db
-    for chunk in pd.read_csv(source, chunksize=chunksize):
+    for chunk in pd.read_csv(source, chunksize=chunksize, low_memory=False):
         
         #Drop unwanted columns
         cols_to_drop = [c for c in unneeded_cols if c in chunk.columns]

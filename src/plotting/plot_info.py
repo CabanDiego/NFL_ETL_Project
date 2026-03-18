@@ -13,10 +13,12 @@ def get_facts(db_url:str, sql_path)-> pd.DataFrame:
     #Creating and running an engine as a connection
     engine = create_engine(db_url)
     with engine.begin() as conn:
+        logger.info("Attempting to retrieve facts from the database")
         #Try block to read sql file for queries
         try:
             sql_commands = sql_path.read_text()
             conn.execute(text(sql_commands))
+            logger.info("Retrieved facts from the database")
         except Exception as e:
             logger.error(f"Exception: {e} when running SQL file: {sql_path}")
 

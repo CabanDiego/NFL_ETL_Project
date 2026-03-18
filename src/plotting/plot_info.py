@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 from sqlalchemy import create_engine, text
 
 #Creating a new directory to store the graphs
-BASEPATH = Path(__file__).resolve().parent.parent
-OUTDIR = BASEPATH / "graphs" 
+BASEPATH = Path(__file__).resolve().parent.parent.parent
+OUTDIR = BASEPATH / "output_graphs" 
 
 logger = logging.getLogger(__name__)
 

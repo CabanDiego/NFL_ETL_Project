@@ -11,8 +11,10 @@ def run_pipeline(source: Path, db_url:str):
     '''Run Pipeline'''
     chunks = read_and_load(source)
     
+    #Loading dataset into staging on the PostgreSQL DB
     load_to_db(chunks, db_url)
     
+    #Running .sql files inside the db
     logger.info("Creating tables inside the data warehouse")
     run_sql_file(db_url, Path("src/sql/create_tables.sql"))
     

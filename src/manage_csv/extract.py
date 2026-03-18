@@ -52,7 +52,7 @@ def read_and_load(source: Path,):
         rename_exists = {k: v for k, v in rename_cols.items() if k in chunk.columns}
         chunk = chunk.rename(columns=rename_exists)
         
-        #Strip whitespace from columns
+        #Strip whitespace from column names
         for col in chunk.select_dtypes(include="object").columns:
             chunk[col] = chunk[col].str.strip()
             
@@ -64,15 +64,15 @@ def read_and_load(source: Path,):
         chunk["posteam"] = chunk["posteam"].replace({"JAC": "JAX"})
         chunk["DefensiveTeam"] = chunk["DefensiveTeam"].replace({"JAC": "JAX"})
 
-        #Only drop rows where posteam is empty or missing
+        #Drop rows where posteam is empty or missing
         if "posteam" in chunk.columns:
             chunk = chunk[chunk["posteam"].notna() & (chunk["posteam"] != "")]
             
-        #Only drop rows where season is empty or missing
+        #Drop rows where season is empty or missing
         if "Season" in chunk.columns:
             chunk = chunk[chunk["Season"].notna() & (chunk["Season"] != "")]
 
-        #Capitalize the PlayType column to make it easier to query
+        #Capitalize the PlayType column to make it easier to query (Example: 'run' to 'Run' or 'pass' to 'Pass' or 'rUn' to 'Run')
         if "PlayType" in chunk.columns:
             chunk["PlayType"] = chunk["PlayType"].str.title()
         

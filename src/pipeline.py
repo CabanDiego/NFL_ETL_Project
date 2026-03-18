@@ -3,7 +3,7 @@ import logging
 from pathlib import Path
 from manage_csv.extract import read_and_load
 from manage_csv.load_into_db import load_to_db
-from src.sql.set_up_tables import run_sql_file
+from src.sql_schema.set_up_tables import run_sql_file
 from src.plotting.plot_info import get_facts
 
 logger = logging.getLogger(__name__)

@@ -1,3 +1,5 @@
+--File for populating tables in the database
+
 -- dim_team
 INSERT INTO dim_team(posteam)
 SELECT DISTINCT UPPER(posteam)

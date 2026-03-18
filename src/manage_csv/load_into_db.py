@@ -5,7 +5,7 @@ from sqlalchemy import create_engine
 
 logger = logging.getLogger(__name__)
 
-def load_to_db(df_chunks, db_url: str):
+def load_to_db(df_chunks, db_url: str)-> None:
     '''Connect to Postgres and send chunks to table'''
     #Create engine to connect to the database
     engine = create_engine(db_url, connect_args={"connect_timeout": 10})

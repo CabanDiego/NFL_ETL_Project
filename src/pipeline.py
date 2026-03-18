@@ -3,11 +3,12 @@ import logging
 from pathlib import Path
 from manage_csv.extract import read_and_load
 from manage_csv.load_into_db import load_to_db
-from sql.run_sql import run_sql_file
+from src.sql.set_up_tables import run_sql_file
+from src.plotting.plot_info import get_facts
 
 logger = logging.getLogger(__name__)
 
-def run_pipeline(source: Path, db_url:str):
+def run_pipeline(source: Path, db_url:str) -> None:
     '''Run Pipeline'''
     chunks = read_and_load(source)
     
@@ -20,3 +21,6 @@ def run_pipeline(source: Path, db_url:str):
     
     logger.info("Populating tables inside data warehouse using raw table in staging")
     run_sql_file(db_url, Path("src/sql/insert_into_tables.sql"))
+
+    logger.info("Querying the database to plot information")
+    get_facts(db_url, Path("src/plotting/query_plot_info.sql"))

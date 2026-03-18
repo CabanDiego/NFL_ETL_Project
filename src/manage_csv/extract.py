@@ -5,7 +5,7 @@ import pandas as pd
 
 logger = logging.getLogger(__name__)
 
-def read_and_load(source: Path,):
+def read_and_load(source: Path):
     '''Read and clean csv into chunks'''
 
     #Verify data file is in folder

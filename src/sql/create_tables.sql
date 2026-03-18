@@ -1,3 +1,5 @@
+--File for creating dim and fact tables
+
 --Storing each team in the raw data
 CREATE TABLE IF NOT EXISTS dim_team (
     posteam TEXT PRIMARY KEY

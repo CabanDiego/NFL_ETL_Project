@@ -1,4 +1,4 @@
-This file is filled with commands which can be used to run this project.
+This file is filled with commands which can be used to set up or connect to the EC2 instance for testing.
 Not all commands may be needed, but are here for reminders.
 
 ---Connect to EC2---

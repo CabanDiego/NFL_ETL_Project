@@ -11,11 +11,12 @@ BASEPATH = Path(__file__).resolve().parent.parent
 RAWDATA = BASEPATH / "data" / "nfl_play_by_play.csv"
 load_dotenv()
 
-#URL for DB in EC2
+#URL for DB in RDS
 db_url = (
-    f"postgresql+psycopg2://{os.environ['PG_USER']}:"
-    f"{os.environ['PG_PASS']}@{os.environ['PG_HOST']}:5432/"
-    f"{os.environ['PG_DB']}"
+    f"postgresql+psycopg2://{os.environ['DB_USERNAME']}:"
+    f"{os.environ['DB_PASSWORD']}@{os.environ['DB_ENDPOINT']}"
+    f"{os.environ.get('DB_PORT', '5432')}/"
+    f"{os.environ['DB_NAME']}"
 )
 
 def main():
